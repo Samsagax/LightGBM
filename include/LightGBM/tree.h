@@ -180,6 +180,30 @@ class Tree {
   inline int data_count(int node) const { return node >= 0 ? internal_count_[node] : leaf_count_[~node]; }
 
   /*!
+   * \brief Adaptive Shrinkage of the tree's output
+   *        shrinkage rate (a.k.a learning rate) is scaled with the maximum output
+   *        of the tree so the maximum output is equal to the current specified rate
+   * \param rate The factor of shrinkage to scale to
+   */
+  virtual inline void AdaptiveShrinkage(double rate) {
+    double true_rate = rate;
+    double max_output = 0;
+
+    for (const auto& output: leaf_value_) {
+      if (abs(output) > max_output)
+        max_output = abs(output);
+    }
+
+    if (max_output >= rate) {
+      true_rate = rate / max_output;
+    } else {
+      true_rate = rate;
+    }
+
+    Shrinkage(true_rate);
+  }
+
+  /*!
   * \brief Shrinkage for the tree's output
   *        shrinkage rate (a.k.a learning rate) is used to tune the training process
   * \param rate The factor of shrinkage

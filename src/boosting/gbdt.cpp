@@ -397,7 +397,11 @@ bool GBDT::TrainOneIter(const score_t* gradients, const score_t* hessians) {
       tree_learner_->RenewTreeOutput(new_tree.get(), objective_function_, residual_getter,
                                      num_data_, bag_data_indices.data(), bag_data_cnt, train_score_updater_->score());
       // shrinkage by learning rate
-      new_tree->Shrinkage(shrinkage_rate_);
+      if (config_->adaptive_learning_rate) {
+        new_tree->AdaptiveShrinkage(shrinkage_rate_);
+      } else {
+        new_tree->Shrinkage(shrinkage_rate_);
+      }
       // update score
       UpdateScore(new_tree.get(), cur_tree_id);
       if (std::fabs(init_scores[cur_tree_id]) > kEpsilon) {

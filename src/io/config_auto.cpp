@@ -239,6 +239,7 @@ const std::unordered_set<std::string>& Config::parameter_set() {
   "monotone_penalty",
   "feature_contri",
   "forcedsplits_filename",
+  "adaptive_learning_rate",
   "refit_decay_rate",
   "cegb_tradeoff",
   "cegb_penalty_split",
@@ -464,6 +465,8 @@ void Config::GetMembersFromString(const std::unordered_map<std::string, std::str
   }
 
   GetString(params, "forcedsplits_filename", &forcedsplits_filename);
+
+  GetBool(params, "adaptive_learning_rate", &adaptive_learning_rate);
 
   GetDouble(params, "refit_decay_rate", &refit_decay_rate);
   CHECK_GE(refit_decay_rate, 0.0);
@@ -715,6 +718,7 @@ std::string Config::SaveMembersToString() const {
   str_buf << "[monotone_penalty: " << monotone_penalty << "]\n";
   str_buf << "[feature_contri: " << Common::Join(feature_contri, ",") << "]\n";
   str_buf << "[forcedsplits_filename: " << forcedsplits_filename << "]\n";
+  str_buf << "[adaptive_learning_rate: " << adaptive_learning_rate << "]\n";
   str_buf << "[refit_decay_rate: " << refit_decay_rate << "]\n";
   str_buf << "[cegb_tradeoff: " << cegb_tradeoff << "]\n";
   str_buf << "[cegb_penalty_split: " << cegb_penalty_split << "]\n";
@@ -839,6 +843,7 @@ const std::unordered_map<std::string, std::vector<std::string>>& Config::paramet
     {"monotone_penalty", {"monotone_splits_penalty", "ms_penalty", "mc_penalty"}},
     {"feature_contri", {"feature_contrib", "fc", "fp", "feature_penalty"}},
     {"forcedsplits_filename", {"fs", "forced_splits_filename", "forced_splits_file", "forced_splits"}},
+    {"adaptive_learning_rate", {}},
     {"refit_decay_rate", {}},
     {"cegb_tradeoff", {}},
     {"cegb_penalty_split", {}},
